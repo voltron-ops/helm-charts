@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name | trimSuffix "-chart" }}-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "postgres-chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "postgres-chart.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name | trimSuffix "-chart" }}-con
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: user
+
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: password
+
+            - name: POSTGRES_DB
+              value: notejam
+
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          volumeMounts:
+            - name: {{ .Chart.Name | trimSuffix "-chart" }}-vol
+              mountPath: /var/lib/postgresql/data
+
+      volumes:
+        - name: {{ .Chart.Name | trimSuffix "-chart" }}-vol
+          persistentVolumeClaim:
+            claimName: postgres-claim
