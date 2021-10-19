@@ -40,4 +40,4 @@ spec:
       volumes:
         - name: {{ .Chart.Name | trimSuffix "-chart" }}-vol
           persistentVolumeClaim:
-            claimName: postgres-claim
+            claimName: {{ .Chart.Name | trimSuffix "-chart" }}-volclaim

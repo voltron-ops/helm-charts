@@ -4,12 +4,12 @@ kind: PersistentVolumeClaim
 metadata:
   name: {{ .Chart.Name | trimSuffix "-chart" }}-volclaim
 spec:
-  storageClassName: {{- .Values.persistence.storageclass }}
+  storageClassName: {{ .Values.persistence.storageClass }}
   accessModes:
     {{- range .Values.persistence.accessModes }}
     - {{ . }}
     {{- end }}
   resources:
     requests:
-      storage: {{- .Values.persistence.storage }}
+      storage: {{ .Values.persistence.storage }}
 {{- end }}
