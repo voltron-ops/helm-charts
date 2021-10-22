@@ -82,7 +82,7 @@ tolerations: []
 affinity: {}
 
 persistence:
-  enabled: true
+  enabled: false
   storageClass: manual
   accessModes:
     - ReadWriteOnce
